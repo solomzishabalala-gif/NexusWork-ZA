@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusWork ZA | Comprehensive South African Career & Job Portal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1e3a8a;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: rgba(30, 58, 138, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow: 0 15px 30px -5px rgba(30, 58, 138, 0.7);
+            transform: translateY(-4px);
+        }
+        .glass-input {
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+        .glass-input:focus {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.05); }
+        }
+        .animate-glow {
+            animation: pulseGlow 8s infinite ease-in-out;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #1e3a8a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#1e3a8a] text-slate-100 selection:bg-blue-500 selection:text-white relative">
+
+    <!-- ================= AUTHENTICATION OVERLAY ================= -->
+    <div id="auth-modal" class="fixed inset-0 z-50 bg-[#1e3a8a]/95 backdrop-blur-xl flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl p-8 max-w-md w-full relative z-10 shadow-2xl border border-white/20">
+            <div class="text-center mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/40 mx-auto mb-3">
+                    <i class="fa-solid fa-bolt text-white text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-extrabold tracking-tight text-white flex items-center justify-center gap-2">
+                    NexusWork <span class="text-[10px] bg-blue-500/30 text-blue-300 border border-blue-400/30 px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider">ZA Elite</span>
+                </h2>
+                <p id="auth-subtitle" class="text-xs text-slate-300 mt-1">Sign in with email and password to access career portals</p>
+            </div>
+
+            <!-- Auth Tabs -->
+            <div class="grid grid-cols-2 gap-2 bg-slate-900/60 p-1.5 rounded-2xl mb-6 border border-white/10">
+                <button onclick="switchAuthMode('signin')" id="tab-auth-signin" class="py-2.5 rounded-xl text-xs font-semibold transition bg-blue-600 text-white shadow-md">Sign In</button>
+                <button onclick="switchAuthMode('signup')" id="tab-auth-signup" class="py-2.5 rounded-xl text-xs font-semibold transition text-slate-400 hover:text-white">Create Account</button>
+            </div>
+
+            <!-- Sign In Form -->
+            <form id="form-signin" onsubmit="handleSignIn(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-envelope absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
+                        <input type="email" id="signin-email" required placeholder="user@email.com" class="glass-input w-full pl-10 pr-4 py-2.5 rounded-xl text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Password</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
+                        <input type="password" id="signin-password" required placeholder="••••••••" class="glass-input w-full pl-10 pr-4 py-2.5 rounded-xl text-sm">
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 rounded-xl text-sm transition shadow-lg shadow-blue-600/30 mt-2">
+                    Sign In to Portal <i class="fa-solid fa-arrow-right ml-1 text-xs"></i>
+                </button>
+            </form>
+
+            <!-- Sign Up Form -->
+            <form id="form-signup" onsubmit="handleSignUp(event)" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Full Name</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-user absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
+                        <input type="text" id="signup-name" required placeholder="Thabo Mokoena" class="glass-input w-full pl-10 pr-4 py-2.5 rounded-xl text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-envelope absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
+                        <input type="email" id="signup-email" required placeholder="thabo@email.com" class="glass-input w-full pl-10 pr-4 py-2.5 rounded-xl text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Password (Min 6 characters)</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
+                        <input type="password" id="signup-password" required minlength="6" placeholder="••••••••" class="glass-input w-full pl-10 pr-4 py-2.5 rounded-xl text-sm">
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-medium py-3 rounded-xl text-sm transition shadow-lg shadow-blue-600/30 mt-2">
+                    Create Account & Access <i class="fa-solid fa-user-plus ml-1 text-xs"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Background Ambient Glow Accents -->
+    <div class="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-[120px] pointer-events-none animate-glow"></div>
+    <div class="absolute bottom-1/3 right-10 w-96 h-96 bg-indigo-600/20 rounded-full blur-[140px] pointer-events-none animate-glow"></div>
+
+    <!-- Top Navigation Header -->
+    <header class="glass-panel sticky top-0 z-40 border-b border-white/10 px-4 lg:px-8 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/40">
+                    <i class="fa-solid fa-bolt text-white text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
+                        NexusWork <span class="text-[10px] bg-blue-500/30 text-blue-300 border border-blue-400/30 px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider">All-Sector ZA Elite</span>
+                    </h1>
+                    <p class="text-xs text-slate-300">South African Careers & Direct Candidate Application Portals</p>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div class="flex items-center gap-2 flex-wrap justify-center">
+                <button onclick="switchTab('jobs')" id="btn-tab-jobs" class="px-3.5 py-2 rounded-xl text-sm font-medium transition bg-blue-600 text-white shadow-md shadow-blue-600/40 flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass"></i>All Careers
+                </button>
+                <button onclick="switchTab('saved')" id="btn-tab-saved" class="px-3.5 py-2 rounded-xl text-sm font-medium transition bg-slate-900/60 hover:bg-slate-800 text-slate-300 border border-white/10 flex items-center gap-2 relative">
+                    <i class="fa-solid fa-bookmark text-amber-400"></i>Saved Jobs <span id="saved-badge" class="bg-amber-500 text-slate-950 font-bold text-[10px] px-1.5 py-0.2 rounded-full">0</span>
+                </button>
+                <button onclick="switchTab('calculator')" id="btn-tab-calculator" class="px-3.5 py-2 rounded-xl text-sm font-medium transition bg-slate-900/60 hover:bg-slate-800 text-slate-300 border border-white/10 flex items-center gap-2">
+                    <i class="fa-solid fa-calculator"></i>ZAR Calc
+                </button>
+                <button onclick="switchTab('resume')" id="btn-tab-resume" class="px-3.5 py-2 rounded-xl text-sm font-medium transition bg-slate-900/60 hover:bg-slate-800 text-slate-300 border border-white/10 flex items-center gap-2">
+                    <i class="fa-solid fa-file-shield"></i>CV & Cover Letter
+                </button>
+            </div>
+
+            <!-- Profile Info Badge with Avatar -->
+            <div class="flex items-center gap-3 bg-slate-900/80 border border-blue-500/30 px-3.5 py-2 rounded-xl">
+                <div id="nav-avatar-container" class="w-7 h-7 rounded-full overflow-hidden bg-blue-600/30 border border-blue-400/40 flex items-center justify-center text-xs font-bold text-white">
+                    <img id="nav-avatar-img" src="" alt="Avatar" class="w-full h-full object-cover hidden">
+                    <span id="nav-avatar-initial">J</span>
+                </div>
+                <span class="text-xs text-blue-300 font-medium"><span id="nav-user-name">Job Seeker</span></span>
+                <button onclick="openProfileModal()" class="text-xs bg-blue-600/40 hover:bg-blue-600/60 text-blue-200 border border-blue-400/30 px-2.5 py-1 rounded-lg transition font-medium">
+                    <i class="fa-solid fa-user-pen"></i> Profile
+                </button>
+                <button onclick="handleSignOut()" class="text-xs bg-rose-600/30 hover:bg-rose-600/50 text-rose-200 border border-rose-400/30 px-2 py-1 rounded-lg transition" title="Sign Out">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 lg:px-8 py-8 flex-grow w-full relative z-10 space-y-8">
+
+        <!-- TAB 1: ALL AVAILABLE CAREERS IN SOUTH AFRICA -->
+        <section id="tab-jobs" class="space-y-6">
+            <div class="glass-panel rounded-2xl p-6 lg:p-8 relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 max-w-2xl">
+                    <span class="text-xs uppercase tracking-wider font-bold text-blue-400 bg-blue-500/10 border border-blue-500/30 px-3 py-1 rounded-full">Direct Candidate Application Portals</span>
+                    <h2 class="text-2xl lg:text-4xl font-extrabold text-white mt-3 tracking-tight">Apply Directly Where Employers Recruit</h2>
+                    <p class="text-slate-300 mt-2 text-sm lg:text-base leading-relaxed">
+                        Browse South African vacancies across IT, Law, Teaching, Engineering, Healthcare, Finance, Telecoms, and Mining. Attach your permanent profile CV & Cover Letter for instant applications.
+                    </p>
+                </div>
+
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="relative">
+                        <i class="fa-solid fa-search absolute left-3.5 top-3.5 text-slate-400"></i>
+                        <input type="text" id="search-keyword" oninput="filterJobs()" placeholder="Search career, law, teaching, engineer..." class="glass-input w-full pl-10 pr-4 py-2.5 rounded-xl text-sm">
+                    </div>
+                    <div>
+                        <select id="filter-category" onchange="filterJobs()" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm">
+                            <option value="">All Career Sectors</option>
+                            <option value="IT & Software">IT & Software Development</option>
+                            <option value="IT Support">IT Support & Networks</option>
+                            <option value="Legal & Law">Legal & Law</option>
+                            <option value="Education">Education & Teaching</option>
+                            <option value="Engineering">Engineering & Built Environment</option>
+                            <option value="Healthcare">Healthcare & Nursing</option>
+                            <option value="Finance">Finance & Accounting</option>
+                            <option value="Telecommunications">Telecommunications</option>
+                            <option value="Mining">Mining & Resources</option>
+                            <option value="Trades">Trades & Artisan</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="filter-location" onchange="filterJobs()" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm">
+                            <option value="">All Provinces / Cities</option>
+                            <option value="Johannesburg">Johannesburg / Sandton</option>
+                            <option value="Pretoria">Pretoria</option>
+                            <option value="Cape Town">Cape Town</option>
+                            <option value="Durban">Durban</option>
+                            <option value="Mbombela">Mbombela / Mpumalanga</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center px-1">
+                <h3 class="text-lg font-semibold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-blue-400"></i> Active Openings Across SA <span id="job-count" class="text-xs bg-blue-500/20 text-blue-300 px-2.5 py-0.5 rounded-full border border-blue-500/30">Loading...</span>
+                </h3>
+                <button onclick="openPostJobModal()" class="text-xs bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-medium px-4 py-2 rounded-xl shadow-md transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-plus"></i> Post Opportunity
+                </button>
+            </div>
+
+            <div id="jobs-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+        </section>
+
+        <!-- TAB 1.5: SAVED / BOOKMARKED JOBS -->
+        <section id="tab-saved" class="hidden space-y-6">
+            <div class="glass-panel rounded-2xl p-6 lg:p-8 relative overflow-hidden">
+                <span class="text-xs uppercase tracking-wider font-bold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full">Personalized Bookmarks</span>
+                <h2 class="text-2xl lg:text-3xl font-extrabold text-white mt-3 tracking-tight">Your Saved Favorite Job Listings</h2>
+                <p class="text-slate-300 mt-2 text-sm">Review, track, and apply directly on recruitment portals using your stored CV & Cover Letter.</p>
+            </div>
+
+            <div id="saved-jobs-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+        </section>
+
+        <!-- TAB 2: ZAR SALARY & SARS TAX CALCULATOR -->
+        <section id="tab-calculator" class="hidden space-y-6">
+            <div class="glass-panel rounded-2xl p-6 lg:p-8 max-w-3xl mx-auto">
+                <div class="text-center max-w-xl mx-auto mb-8">
+                    <span class="text-xs uppercase tracking-wider font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full">2026/2027 Tax & Pay Estimator</span>
+                    <h2 class="text-2xl font-bold text-white mt-3">ZAR Take-Home Pay & SARS Tax Calculator</h2>
+                    <p class="text-slate-300 text-sm mt-1">Estimate your net monthly salary after official SARS tax brackets, rebates, and UIF contributions.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Gross Monthly Salary (ZAR)</label>
+                            <div class="relative">
+                                <span class="absolute left-3.5 top-2.5 text-slate-400 font-bold">R</span>
+                                <input type="number" id="calc-gross" value="25000" class="glass-input w-full pl-8 pr-4 py-2.5 rounded-xl text-sm font-semibold text-emerald-400" oninput="calculateSalary()">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Annual Bonus / 13th Cheque (ZAR)</label>
+                            <input type="number" id="calc-bonus" value="0" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm" oninput="calculateSalary()">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Age Group (SARS Rebates)</label>
+                            <select id="calc-age" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm" onchange="calculateSalary()">
+                                <option value="under65">Under 65 years</option>
+                                <option value="65to74">65 to 74 years</option>
+                                <option value="75plus">75 years and older</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 flex flex-col justify-between border border-blue-500/30">
+                        <div>
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-blue-400 mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-receipt"></i> Monthly Breakdown
+                            </h4>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between border-b border-white/5 pb-2">
+                                    <span class="text-slate-400">Gross Monthly:</span>
+                                    <span id="res-gross" class="font-semibold text-white">R 25,000</span>
+                                </div>
+                                <div class="flex justify-between border-b border-white/5 pb-2">
+                                    <span class="text-slate-400">Estimated PAYE Tax:</span>
+                                    <span id="res-tax" class="font-semibold text-rose-400">- R 3,315</span>
+                                </div>
+                                <div class="flex justify-between border-b border-white/5 pb-2">
+                                    <span class="text-slate-400">UIF Contribution (1%):</span>
+                                    <span id="res-uif" class="font-semibold text-amber-400">- R 177</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 pt-4 border-t border-white/10">
+                            <span class="text-xs text-slate-400 block">Estimated Net Take-Home Pay</span>
+                            <div id="res-net" class="text-3xl font-extrabold text-emerald-400 mt-1">R 21,508</div>
+                            <span class="text-[10px] text-slate-400 mt-1 block">*Based on 2026/2027 SARS tax schedules.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: CV & PERMANENT COVER LETTER PROFILE MANAGER -->
+        <section id="tab-resume" class="hidden space-y-6">
+            <div class="glass-panel rounded-2xl p-6 lg:p-8 max-w-5xl mx-auto space-y-6">
+                <div class="text-center max-w-xl mx-auto">
+                    <span class="text-xs uppercase tracking-wider font-bold text-blue-400 bg-blue-500/10 border border-blue-500/30 px-3 py-1 rounded-full">Permanent Candidate Profile Vault</span>
+                    <h2 class="text-2xl font-bold text-white mt-3">Your Stored CV & Cover Letter</h2>
+                    <p class="text-slate-300 text-sm mt-1">Uploaded CV documents and cover letters stay permanently on your profile for rapid job applications and sector matching.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Left Column: CV Upload & Status -->
+                    <div class="space-y-4 glass-card p-6 rounded-2xl border border-blue-500/20">
+                        <h4 class="text-sm font-semibold text-blue-300 flex items-center gap-2">
+                            <i class="fa-solid fa-file-arrow-up"></i> Stored CV / Resume Document
+                        </h4>
+                        
+                        <div class="glass-input p-4 rounded-xl border border-dashed border-blue-400/40 text-center space-y-2 relative hover:border-blue-400 transition">
+                            <i class="fa-solid fa-cloud-arrow-up text-3xl text-blue-400"></i>
+                            <p class="text-xs text-slate-300 font-medium" id="cv-filename-display">Upload or Update PDF/Word Resume (.pdf, .docx)</p>
+                            <input type="file" id="cv-file-input" accept=".pdf,.doc,.docx,.txt" onchange="handleCvUpload(event)" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+                        </div>
+                        
+                        <div class="glass-input p-4 rounded-xl border border-white/10 text-xs space-y-2">
+                            <p><strong>Candidate Name:</strong> <span id="match-candidate-name">Job Seeker</span></p>
+                            <p><strong>Detected Qualification:</strong> <span id="match-candidate-edu" class="text-blue-400">General / Not Specified</span></p>
+                            <p><strong>Parsed Skills:</strong> <span id="match-candidate-skills" class="text-slate-300">Communication, Problem Solving</span></p>
+                            <p><strong>CV Status:</strong> <span id="cv-status-badge" class="text-emerald-400 font-semibold">Active & Saved on Profile</span></p>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Select Sector to Test Compatibility</label>
+                            <select id="match-test-sector" class="glass-input w-full px-4 py-2.5 rounded-xl text-sm">
+                                <option value="IT">IT & Software / Support</option>
+                                <option value="Legal">Legal & Law</option>
+                                <option value="Teaching">Education & Teaching</option>
+                                <option value="Engineering">Engineering</option>
+                                <option value="Healthcare">Healthcare & Nursing</option>
+                                <option value="Finance">Finance & Accounting</option>
+                                <option value="Telecommunications">Telecommunications</option>
+                                <option value="Mining">Mining & Resources</option>
+                            </select>
+                        </div>
+
+                        <button onclick="runFieldMatch()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 rounded-xl text-sm transition shadow-lg shadow-blue-600/30">
+                            <i class="fa-solid fa-check-to-slot mr-1.5"></i> Run CV Match Analysis
+                        </button>
+                    </div>
+
+                    <!-- Right Column: Cover Letter Editor & Storage -->
+                    <div class="space-y-4 glass-card p-6 rounded-2xl border border-indigo-500/20 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <h4 class="text-sm font-semibold text-indigo-300 flex items-center gap-2">
+                                    <i class="fa-solid fa-envelope-open-text"></i> Permanent Cover Letter
+                                </h4>
+                                <span class="text-[10px] bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-full">Auto-Saves to Profile</span>
+                            </div>
+                            <p class="text-xs text-slate-300 mb-2">Write or paste your professional cover letter below. It remains securely on your profile across sessions.</p>
+                            
+                            <textarea id="profile-cover-letter" rows="8" oninput="saveCoverLetterLive()" class="glass-input w-full p-3 rounded-xl text-xs leading-relaxed" placeholder="Dear Hiring Manager,&#10;&#10;I am writing to express my strong interest in joining your esteemed organisation..."></textarea>
+                        </div>
+
+                        <div class="pt-3 border-t border-white/10 flex items-center justify-between">
+                            <span id="cover-letter-status" class="text-[11px] text-emerald-400"><i class="fa-solid fa-circle-check"></i> Saved successfully</span>
+                            <button onclick="copyCoverLetter()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-3.5 py-1.5 rounded-lg transition">
+                                <i class="fa-solid fa-copy mr-1"></i> Copy Cover Letter
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Match Analysis Report Banner -->
+                <div class="glass-input p-4 rounded-2xl border border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <div id="match-score-circle" class="w-14 h-14 rounded-full border-2 border-emerald-500 flex items-center justify-center bg-emerald-500/10 flex-shrink-0">
+                            <span id="match-score-text" class="text-lg font-extrabold text-emerald-400">92%</span>
+                        </div>
+                        <div>
+                            <h5 id="match-title" class="text-sm font-bold text-white">Profile & CV Match Ready</h5>
+                            <p id="match-desc" class="text-xs text-slate-300">Your profile, CV, and Cover Letter are synced and ready for South African recruitment portals.</p>
+                        </div>
+                    </div>
+                    <div id="validation-status" class="text-xs bg-slate-900/80 border border-white/10 px-4 py-2.5 rounded-xl text-emerald-400 flex items-center gap-2 flex-shrink-0">
+                        <i class="fa-solid fa-shield-halved"></i> Active Profile Secured
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ================= MODAL: EDIT PROFILE & PERMANENT ASSETS ================= -->
+    <div id="profile-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="glass-panel rounded-2xl p-6 lg:p-8 max-w-lg w-full relative border border-white/20 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button onclick="closeProfileModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="mb-6">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-user-pen text-blue-400"></i> Edit Profile & Permanent Assets
+                </h3>
+                <p class="text-xs text-slate-300 mt-1">Manage your photo, contact info, qualification, CV, and cover letter.</p>
+            </div>
+
+            <div class="space-y-3">
+                <div class="flex items-center gap-4 bg-slate-900/60 p-3 rounded-xl border border-white/10">
+                    <div class="w-12 h-12 rounded-full overflow-hidden bg-blue-600/40 border border-blue-400/40 flex items-center justify-center text-base font-bold text-white flex-shrink-0">
+                        <img id="modal-preview-img" src="" alt="Preview" class="w-full h-full object-cover hidden">
+                        <span id="modal-preview-initial">J</span>
+                    </div>
+                    <div class="flex-grow">
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Profile Picture</label>
+                        <input type="file" id="avatar-file-input" accept="image/*" onchange="handleAvatarSelected(event)" class="text-xs text-slate-300 file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 w-full cursor-pointer">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Full Name</label>
+                    <input type="text" id="edit-name" placeholder="Thabo Mokoena" class="glass-input w-full px-4 py-2 rounded-xl text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
+                        <input type="email" id="edit-email" placeholder="thabo@email.com" class="glass-input w-full px-4 py-2 rounded-xl text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Phone Number</label>
+                        <input type="text" id="edit-phone" placeholder="0791234567" class="glass-input w-full px-4 py-2 rounded-xl text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Field of Study / Qualification</label>
+                    <input type="text" id="edit-edu" placeholder="Diploma in ICT / LLB / B.Ed" class="glass-input w-full px-4 py-2 rounded-xl text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Skills</label>
+                    <input type="text" id="edit-skills" placeholder="JavaScript, Python, Communication" class="glass-input w-full px-4 py-2 rounded-xl text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Cover Letter (Permanent on Profile)</label>
+                    <textarea id="edit-modal-cover" rows="4" class="glass-input w-full p-3 rounded-xl text-xs" placeholder="Cover letter text..."></textarea>
+                </div>
+                <button onclick="saveProfileChanges()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 rounded-xl text-sm transition shadow-lg shadow-blue-600/30 mt-2">
+                    Save Profile & Permanent Assets
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: POST OPPORTUNITY ================= -->
+    <div id="post-job-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="glass-panel rounded-2xl p-6 lg:p-8 max-w-lg w-full relative border border-white/20 shadow-2xl">
+            <button onclick="closePostJobModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="mb-6">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-briefcase text-blue-400"></i> Post New Career Opportunity
+                </h3>
+                <p class="text-xs text-slate-300 mt-1">Publish a vacancy across any South African sector.</p>
+            </div>
+
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Job Title</label>
+                    <input type="text" id="new-title" placeholder="e.g. Candidate Attorney / Mechanical Engineer" class="glass-input w-full px-4 py-2 rounded-xl text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Company / Institution</label>
+                        <input type="text" id="new-company" placeholder="e.g. Eskom / Werksmans" class="glass-input w-full px-4 py-2 rounded-xl text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Location</label>
+                        <select id="new-location" class="glass-input w-full px-4 py-2 rounded-xl text-sm">
+                            <option value="Johannesburg">Johannesburg</option>
+                            <option value="Pretoria">Pretoria</option>
+                            <option value="Cape Town">Cape Town</option>
+                            <option value="Durban">Durban</option>
+                            <option value="Mbombela">Mbombela / Mpumalanga</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Career Sector</label>
+                        <select id="new-category" class="glass-input w-full px-4 py-2 rounded-xl text-sm">
+                            <option value="IT & Software">IT & Software</option>
+                            <option value="IT Support">IT Support</option>
+                            <option value="Legal & Law">Legal & Law</option>
+                            <option value="Education">Education & Teaching</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Telecommunications">Telecommunications</option>
+                            <option value="Mining">Mining</option>
+                            <option value="Trades">Trades & Artisan</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Salary / Stipend (ZAR)</label>
+                        <input type="text" id="new-salary" placeholder="e.g. R25,000 / month" class="glass-input w-full px-4 py-2 rounded-xl text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Candidate Portal Application URL</label>
+                    <input type="url" id="new-url" placeholder="https://careers.company.co.za/jobs" class="glass-input w-full px-4 py-2 rounded-xl text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Job Description & Qualification Requirement</label>
+                    <textarea id="new-desc" rows="3" placeholder="Describe role requirements..." class="glass-input w-full px-4 py-2 rounded-xl text-sm"></textarea>
+                </div>
+                <button onclick="submitNewJob()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 rounded-xl text-sm transition shadow-lg shadow-blue-600/30 mt-2">
+                    Publish Listing Live
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="glass-panel mt-auto py-6 border-t border-white/10 text-center text-xs text-slate-400 relative z-10">
+        <p>NexusWork ZA Multi-Sector &copy; 2026 | Built for South African Job Seekers & Graduates</p>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Authentication & Profile State Management with Permanent CV and Cover Letter
+        let candidateProfile = JSON.parse(localStorage.getItem('nexuswork_user_profile')) || {
+            name: "Solomuzi Shabalala",
+            email: "solomzishabalala@gmail.com",
+            phone: "0790918563",
+            edu: "Diploma in Information and Communication Technology",
+            skills: "Java, Python, C++, PHP, SQL, HTML5, CSS3, JavaScript, TypeScript, Firebase, REST APIs, Git",
+            avatar: "",
+            cvFileName: "Solomuzi_Shabalala_CV.pdf",
+            coverLetter: "Dear Hiring Manager,\n\nI am finishing my diploma in ICT and writing to express my strong interest in entry-level IT opportunities, software development, and technical support roles. I bring hands-on capabilities across Java, Python, JavaScript, and database systems, and I am eager to apply my skills and gain practical professional experience within your dynamic team.\n\nThank you for considering my application.\n\nSincerely,\nSolomuzi Shabalala"
+        };
+
+        let savedJobIds = JSON.parse(localStorage.getItem('nexuswork_saved_jobs')) || [];
+
+        let jobsData = [
+            {
+                id: 1,
+                title: "Junior Full-Stack Software Developer",
+                company: "Standard Bank Group",
+                location: "Johannesburg",
+                category: "IT & Software",
+                salary: "R35,000 / month",
+                type: "Permanent Graduate Role",
+                date: "Active",
+                desc: "Apply via Standard Bank SmartRecruiters portal. Develop and maintain enterprise applications using Java, Python, and cloud infrastructure.",
+                applyUrl: "https://www.standardbank.com/sbg/standard-bank-group/careers/apply/jobs/view-all-jobs"
+            },
+            {
+                id: 2,
+                title: "Software Engineer Graduate Intern",
+                company: "Capitec Bank",
+                location: "Stellenbosch / Johannesburg",
+                category: "IT & Software",
+                salary: "R30,000 / month",
+                type: "Graduate Program",
+                date: "Active",
+                desc: "Register and apply on the Capitec Applicant Portal. Build scalable banking software solutions utilizing modern tech stacks.",
+                applyUrl: "https://careers.capitecbank.co.za/"
+            },
+            {
+                id: 3,
+                title: "Technical Support Specialist & Network Technician",
+                company: "Careers24 Tech & IT Board",
+                location: "Mbombela (Nelspruit)",
+                category: "IT Support",
+                salary: "Market Related",
+                type: "Full-Time Entry Level",
+                date: "Active",
+                desc: "Apply directly via Careers24 Mbombela IT Support listings. Provide technical support across network infrastructure, VoIP, and hardware.",
+                applyUrl: "https://www.careers24.com/jobs/lc-mbombela/se-it/"
+            },
+            {
+                id: 4,
+                title: "Desktop Support & Infrastructure Engineer",
+                company: "Vodacom South Africa",
+                location: "Midrand",
+                category: "IT Support",
+                salary: "R26,000 / month",
+                type: "Permanent Role",
+                date: "Active",
+                desc: "Apply via Vodacom Job Search Portal. Provide second-line technical support, system maintenance, and user infrastructure management.",
+                applyUrl: "https://vodacom.com/search-jobs.php"
+            },
+            {
+                id: 5,
+                title: "Candidate Attorney / Legal Intern",
+                company: "Werksmans Attorneys",
+                location: "Johannesburg (Sandton)",
+                category: "Legal & Law",
+                salary: "Market Standard",
+                type: "Articles / Graduate Track",
+                date: "Active",
+                desc: "Submit online articles application. Assist partners with legal research, litigation drafting, and contract reviews. Requires LLB.",
+                applyUrl: "https://werksmans.com/graduates/online-application/"
+            },
+            {
+                id: 6,
+                title: "Junior Legal Compliance Advisor",
+                company: "Nedbank Group",
+                location: "Pretoria",
+                category: "Legal & Law",
+                salary: "R28,000 / month",
+                type: "Full-Time Role",
+                date: "Active",
+                desc: "Apply on Nedbank Jobs Portal. Monitor statutory compliance, draft regulatory reports, and review legal agreements.",
+                applyUrl: "https://jobs.nedbank.co.za/"
+            },
+            {
+                id: 7,
+                title: "Educator / Mathematics & Science Teacher",
+                company: "PNet Education & Teaching SA",
+                location: "Mbombela",
+                category: "Education",
+                salary: "R18,500 / month",
+                type: "Full-Time Educator",
+                date: "Active",
+                desc: "Apply directly via PNet Teaching Vacancies. Teach Grade 10-12 Mathematics and Physical Sciences, manage classroom assessments.",
+                applyUrl: "https://www.pnet.co.za/jobs/Teaching.html"
+            },
+            {
+                id: 8,
+                title: "Computer Literacy & IT Educator",
+                company: "Indeed South Africa Education",
+                location: "Mbombela",
+                category: "Education",
+                salary: "R16,000 / month",
+                type: "Educator Role",
+                date: "Active",
+                desc: "Quick apply via Indeed SA. Instruct learners in foundational computing, typing, and software skills.",
+                applyUrl: "https://za.indeed.com/q-it-teacher-l-mbombela,-mpumalanga-jobs.html"
+            },
+            {
+                id: 9,
+                title: "Graduate Candidate Mechanical Engineer",
+                company: "Eskom Holdings SOC Ltd",
+                location: "Witbank / Mbombela",
+                category: "Engineering",
+                salary: "R32,000 / month",
+                type: "Graduate Training Program",
+                date: "Active",
+                desc: "Register CV and apply on Eskom's CI.HR Recruitment System. Assist senior engineers with power plant maintenance and safety protocols.",
+                applyUrl: "https://eskomcareers.ci.hr/applicant/index.php?controller=Page&name=jobsearch"
+            },
+            {
+                id: 10,
+                title: "Junior Civil Engineering Technician",
+                company: "WBHO Construction",
+                location: "Johannesburg",
+                category: "Engineering",
+                salary: "R24,000 / month",
+                type: "Permanent Role",
+                date: "Active",
+                desc: "Download & submit WBHO Vacancy Application Form. Site supervision, surveying, and structural drawing review.",
+                applyUrl: "https://www.wbho.co.za/careers-and-students/"
+            },
+            {
+                id: 11,
+                title: "Professional Staff Nurse / Nursing Auxiliary",
+                company: "Netcare Recruitment Portal",
+                location: "Mbombela",
+                category: "Healthcare",
+                salary: "R22,000 / month",
+                type: "Full-Time Shift Role",
+                date: "Active",
+                desc: "Apply directly via Netcare Online Nursing & Medical Recruitment portal. Requires SANC registration.",
+                applyUrl: "https://www.netcare.co.za/Careers"
+            },
+            {
+                id: 12,
+                title: "Junior Accountant / Bookkeeper",
+                company: "Careers24 Finance & Accounting",
+                location: "Johannesburg",
+                category: "Finance",
+                salary: "R26,000 / month",
+                type: "Graduate Track",
+                date: "Active",
+                desc: "Apply via Careers24 Finance portal. Manage ledger accounts, prepare financial statements, and assist with tax audits.",
+                applyUrl: "https://www.careers24.com/jobs/se-finance/"
+            },
+            {
+                id: 13,
+                title: "Actuarial / Financial Analyst Graduate",
+                company: "Discovery Limited",
+                location: "Sandton",
+                category: "Finance",
+                salary: "R34,000 / month",
+                type: "Graduate Program",
+                date: "Active",
+                desc: "Apply directly on Discovery All-Jobs Candidate Search Portal. Financial modelling, risk analysis, and statistical evaluation.",
+                applyUrl: "https://careers.discovery.co.za/go/All-Jobs/4509301"
+            },
+            {
+                id: 14,
+                title: "Junior Network Systems Controller",
+                company: "MTN South Africa",
+                location: "Fairland / Johannesburg",
+                category: "Telecommunications",
+                salary: "R28,000 / month",
+                type: "Permanent Role",
+                date: "Active",
+                desc: "Apply on MTN Oracle Cloud Candidate Portal. Monitor core mobile and data network nodes, escalation and fault resolution.",
+                applyUrl: "https://ehle.fa.em2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/requisitions"
+            },
+            {
+                id: 15,
+                title: "Graduate Mining / Geotechnical Engineer",
+                company: "Anglo American",
+                location: "Johannesburg / Emalahleni",
+                category: "Mining",
+                salary: "R33,000 / month",
+                type: "Graduate Scheme",
+                date: "Active",
+                desc: "Apply directly on Anglo American South Africa Job Search Portal. Underground and surface mining operations planning.",
+                applyUrl: "https://www.angloamerican.com/careers/job-opportunities/apply?searchtext=south+africa"
+            },
+            {
+                id: 16,
+                title: "Qualified Electrician (Millwright / Trade Tested)",
+                company: "PNet Engineering & Artisans SA",
+                location: "Secunda / Mpumalanga",
+                category: "Trades",
+                salary: "R30,000 / month",
+                type: "Permanent Artisan Role",
+                date: "Active",
+                desc: "Apply directly on PNet Artisan & Trade listings in Mpumalanga. Requires Trade Test Certificate (Red Seal).",
+                applyUrl: "https://www.pnet.co.za/jobs/Artisan.html"
+            }
+        ];
+
+        // Auth Logic
+        function switchAuthMode(mode) {
+            const btnSignin = document.getElementById('tab-auth-signin');
+            const btnSignup = document.getElementById('tab-auth-signup');
+            const formSignin = document.getElementById('form-signin');
+            const formSignup = document.getElementById('form-signup');
+            const subtitle = document.getElementById('auth-subtitle');
+
+            if (mode === 'signin') {
+                btnSignin.className = "py-2.5 rounded-xl text-xs font-semibold transition bg-blue-600 text-white shadow-md";
+                btnSignup.className = "py-2.5 rounded-xl text-xs font-semibold transition text-slate-400 hover:text-white";
+                formSignin.classList.remove('hidden');
+                formSignup.classList.add('hidden');
+                subtitle.innerText = "Sign in with email and password to access career portals";
+            } else {
+                btnSignup.className = "py-2.5 rounded-xl text-xs font-semibold transition bg-blue-600 text-white shadow-md";
+                btnSignin.className = "py-2.5 rounded-xl text-xs font-semibold transition text-slate-400 hover:text-white";
+                formSignup.classList.remove('hidden');
+                formSignin.classList.add('hidden');
+                subtitle.innerText = "Create your account to unlock career matching and calculators";
+            }
+        }
+
+        function handleSignIn(event) {
+            event.preventDefault();
+            const email = document.getElementById('signin-email').value;
+            localStorage.setItem('nexuswork_logged_in', 'true');
+            candidateProfile.email = email;
+            candidateProfile.name = email.split('@')[0];
+            localStorage.setItem('nexuswork_user_profile', JSON.stringify(candidateProfile));
+            document.getElementById('auth-modal').classList.add('hidden');
+            updateProfileUI();
+        }
+
+        function handleSignUp(event) {
+            event.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            candidateProfile.name = name;
+            candidateProfile.email = email;
+            localStorage.setItem('nexuswork_logged_in', 'true');
+            localStorage.setItem('nexuswork_user_profile', JSON.stringify(candidateProfile));
+            document.getElementById('auth-modal').classList.add('hidden');
+            updateProfileUI();
+        }
+
+        function handleSignOut() {
+            localStorage.removeItem('nexuswork_logged_in');
+            document.getElementById('auth-modal').classList.remove('hidden');
+        }
+
+        function checkAuth() {
+            const isLoggedIn = localStorage.getItem('nexuswork_logged_in');
+            if (isLoggedIn === 'true') {
+                document.getElementById('auth-modal').classList.add('hidden');
+            } else {
+                document.getElementById('auth-modal').classList.remove('hidden');
+            }
+        }
+
+        function updateProfileUI() {
+            document.getElementById('nav-user-name').innerText = candidateProfile.name;
+            document.getElementById('match-candidate-name').innerText = candidateProfile.name;
+            document.getElementById('match-candidate-edu').innerText = candidateProfile.edu;
+            document.getElementById('match-candidate-skills').innerText = candidateProfile.skills;
+
+            if (candidateProfile.cvFileName) {
+                document.getElementById('cv-filename-display').innerText = `Active Stored CV: ${candidateProfile.cvFileName}`;
+            }
+
+            if (candidateProfile.coverLetter) {
+                document.getElementById('profile-cover-letter').value = candidateProfile.coverLetter;
+            }
+
+            const navImg = document.getElementById('nav-avatar-img');
+            const navInit = document.getElementById('nav-avatar-initial');
+            const modalPrevImg = document.getElementById('modal-preview-img');
+            const modalPrevInit = document.getElementById('modal-preview-initial');
+
+            if (candidateProfile.avatar) {
+                navImg.src = candidateProfile.avatar;
+                navImg.classList.remove('hidden');
+                navInit.classList.add('hidden');
+
+                modalPrevImg.src = candidateProfile.avatar;
+                modalPrevImg.classList.remove('hidden');
+                modalPrevInit.classList.add('hidden');
+            } else {
+                navImg.classList.add('hidden');
+                navInit.classList.remove('hidden');
+                navInit.innerText = candidateProfile.name.charAt(0).toUpperCase();
+
+                modalPrevImg.classList.add('hidden');
+                modalPrevInit.classList.remove('hidden');
+                modalPrevInit.innerText = candidateProfile.name.charAt(0).toUpperCase();
+            }
+        }
+
+        function handleAvatarSelected(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    candidateProfile.avatar = e.target.result;
+                    document.getElementById('modal-preview-img').src = candidateProfile.avatar;
+                    document.getElementById('modal-preview-img').classList.remove('hidden');
+                    document.getElementById('modal-preview-initial').classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleCvUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                candidateProfile.cvFileName = file.name;
+                document.getElementById('cv-filename-display').innerText = `Active Stored CV: ${file.name}`;
+                let fileNameLower = file.name.toLowerCase();
+                if (fileNameLower.includes('it') || fileNameLower.includes('developer') || fileNameLower.includes('ict')) {
+                    candidateProfile.edu = "Diploma in Information and Communication Technology";
+                    candidateProfile.skills = "Java, Python, JavaScript, SQL, Git";
+                } else if (fileNameLower.includes('law') || fileNameLower.includes('legal')) {
+                    candidateProfile.edu = "Bachelor of Laws (LLB)";
+                    candidateProfile.skills = "Legal Research, Litigation, Contract Drafting";
+                } else {
+                    candidateProfile.edu = "Professional Qualification (Parsed from CV)";
+                    candidateProfile.skills = "Project Management, Problem Solving, Communication";
+                }
+                localStorage.setItem('nexuswork_user_profile', JSON.stringify(candidateProfile));
+                updateProfileUI();
+                alert(`Resume "${file.name}" successfully uploaded and saved to your profile vault!`);
+            }
+        }
+
+        function saveCoverLetterLive() {
+            const text = document.getElementById('profile-cover-letter').value;
+            candidateProfile.coverLetter = text;
+            localStorage.setItem('nexuswork_user_profile', JSON.stringify(candidateProfile));
+            const status = document.getElementById('cover-letter-status');
+            status.innerHTML = `<i class="fa-solid fa-circle-check"></i> Auto-saved`;
+            setTimeout(() => {
+                status.innerHTML = `<i class="fa-solid fa-circle-check"></i> Saved successfully`;
+            }, 1500);
+        }
+
+        function copyCoverLetter() {
+            const text = document.getElementById('profile-cover-letter').value;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Cover letter copied to clipboard! Ready to paste into job application portals.");
+            });
+        }
+
+        function switchTab(tabName) {
+            ['jobs', 'saved', 'calculator', 'resume'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                document.getElementById(`btn-tab-${t}`).className = "px-3.5 py-2 rounded-xl text-sm font-medium transition bg-slate-900/60 hover:bg-slate-800 text-slate-300 border border-white/10 flex items-center gap-2";
+            });
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            document.getElementById(`btn-tab-${tabName}`).className = "px-3.5 py-2 rounded-xl text-sm font-medium transition bg-blue-600 text-white shadow-md shadow-blue-600/40 flex items-center gap-2";
+
+            if (tabName === 'saved') {
+                renderSavedJobs();
+            }
+        }
+
+        function toggleBookmark(jobId) {
+            const index = savedJobIds.indexOf(jobId);
+            if (index > -1) {
+                savedJobIds.splice(index, 1);
+            } else {
+                savedJobIds.push(jobId);
+            }
+            localStorage.setItem('nexuswork_saved_jobs', JSON.stringify(savedJobIds));
+            updateSavedBadge();
+            renderJobs(jobsData);
+            if (!document.getElementById('tab-saved').classList.contains('hidden')) {
+                renderSavedJobs();
+            }
+        }
+
+        function updateSavedBadge() {
+            document.getElementById('saved-badge').innerText = savedJobIds.length;
+        }
+
+        function renderSavedJobs() {
+            const container = document.getElementById('saved-jobs-container');
+            const bookmarkedJobs = jobsData.filter(job => savedJobIds.includes(job.id));
+
+            if (bookmarkedJobs.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400">You haven't bookmarked any jobs yet. Browse listings and click the bookmark icon to save them here.</div>`;
+                return;
+            }
+
+            container.innerHTML = bookmarkedJobs.map(job => `
+                <div class="glass-card rounded-2xl p-5 flex flex-col justify-between border border-amber-500/30 relative overflow-hidden group">
+                    <div>
+                        <div class="flex justify-between items-start gap-2 mb-2">
+                            <span class="text-[10px] font-semibold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2.5 py-0.5 rounded-full">${job.category}</span>
+                            <button onclick="toggleBookmark(${job.id})" class="text-amber-400 hover:text-rose-400 transition text-sm">
+                                <i class="fa-solid fa-bookmark"></i>
+                            </button>
+                        </div>
+                        <h4 class="text-base font-bold text-white group-hover:text-amber-300 transition">${job.title}</h4>
+                        <p class="text-xs font-medium text-slate-300 mt-1"><i class="fa-solid fa-building text-blue-400"></i> ${job.company}</p>
+                        <p class="text-xs text-slate-400 mt-0.5"><i class="fa-solid fa-location-dot text-rose-400"></i> ${job.location}, South Africa</p>
+                        <p class="text-xs text-slate-300 mt-3 line-clamp-2">${job.desc}</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
+                        <span class="text-xs font-bold text-emerald-400">${job.salary}</span>
+                        <a href="${job.applyUrl}" target="_blank" rel="noopener noreferrer" class="text-xs bg-blue-600 text-white font-medium px-3.5 py-1.5 rounded-lg transition">Apply on Portal</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderJobs(filteredList) {
+            const container = document.getElementById('jobs-container');
+            document.getElementById('job-count').innerText = `${filteredList.length} Active`;
+            
+            if (filteredList.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400">No matching careers found.</div>`;
+                return;
+            }
+
+            container.innerHTML = filteredList.map(job => {
+                const isSaved = savedJobIds.includes(job.id);
+                return `
+                <div class="glass-card rounded-2xl p-5 flex flex-col justify-between border border-white/10 relative overflow-hidden group">
+                    <div>
+                        <div class="flex justify-between items-start gap-2 mb-2">
+                            <span class="text-[10px] font-semibold uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-500/30 px-2.5 py-0.5 rounded-full">${job.category}</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-slate-400">${job.date}</span>
+                                <button onclick="toggleBookmark(${job.id})" class="text-sm transition ${isSaved ? 'text-amber-400' : 'text-slate-400 hover:text-white'}">
+                                    <i class="${isSaved ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark'}"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <h4 class="text-base font-bold text-white group-hover:text-blue-300 transition">${job.title}</h4>
+                        <p class="text-xs font-medium text-slate-300 mt-1"><i class="fa-solid fa-building text-blue-400"></i> ${job.company}</p>
+                        <p class="text-xs text-slate-400 mt-0.5"><i class="fa-solid fa-location-dot text-rose-400"></i> ${job.location}, South Africa</p>
+                        <p class="text-xs text-slate-300 mt-3 line-clamp-2">${job.desc}</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
+                        <span class="text-xs font-bold text-emerald-400">${job.salary}</span>
+                        <a href="${job.applyUrl}" target="_blank" rel="noopener noreferrer" class="text-xs bg-blue-600 hover:bg-blue-500 text-white font-medium px-3.5 py-1.5 rounded-lg transition shadow-md">Apply on Portal</a>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        function filterJobs() {
+            const keyword = document.getElementById('search-keyword').value.toLowerCase();
+            const category = document.getElementById('filter-category').value;
+            const location = document.getElementById('filter-location').value;
+
+            const filtered = jobsData.filter(job => {
+                const matchKeyword = job.title.toLowerCase().includes(keyword) || job.company.toLowerCase().includes(keyword) || job.desc.toLowerCase().includes(keyword);
+                const matchCategory = category === "" || job.category === category;
+                const matchLocation = location === "" || job.location.includes(location);
+                return matchKeyword && matchCategory && matchLocation;
+            });
+            renderJobs(filtered);
+        }
+
+        function calculateSalary() {
+            const gross = parseFloat(document.getElementById('calc-gross').value) || 0;
+            const bonus = parseFloat(document.getElementById('calc-bonus').value) || 0;
+            const annualGross = (gross * 12) + bonus;
+
+            let annualTax = 0;
+            if (annualGross <= 245100) annualTax = annualGross * 0.18;
+            else if (annualGross <= 383100) annualTax = 44118 + (annualGross - 245100) * 0.26;
+            else annualTax = 79998 + (annualGross - 383100) * 0.31;
+
+            let totalRebate = 17820;
+            annualTax = Math.max(0, annualTax - totalRebate);
+
+            const monthlyTax = annualTax / 12;
+            const uif = Math.min(gross * 0.01, 177.12);
+            const netMonthly = gross - monthlyTax - uif;
+
+            document.getElementById('res-gross').innerText = `R ${gross.toLocaleString()}`;
+            document.getElementById('res-tax').innerText = `- R ${Math.round(monthlyTax).toLocaleString()}`;
+            document.getElementById('res-uif').innerText = `- R ${Math.round(uif).toLocaleString()}`;
+            document.getElementById('res-net').innerText = `R ${Math.round(netMonthly).toLocaleString()}`;
+        }
+
+        function runFieldMatch() {
+            const sector = document.getElementById('match-test-sector').value;
+            const skillText = (candidateProfile.skills || '').toLowerCase();
+            const eduText = (candidateProfile.edu || '').toLowerCase();
+            const baseScore = 72 + (skillText.includes('java') ? 6 : 0) + (skillText.includes('python') ? 5 : 0)
+                + (skillText.includes('sql') ? 4 : 0) + (skillText.includes('communication') ? 3 : 0)
+                + (eduText.includes('ict') ? 4 : 0) + (eduText.includes('law') ? 4 : 0)
+                + (eduText.includes('engineering') ? 5 : 0);
+            const score = Math.min(98, Math.max(72, baseScore));
+            const matchDefinitions = {
+                IT: {
+                    title: 'Technology Profile Match Ready',
+                    desc: 'Your ICT qualification and technical skills align strongly with software, support, and digital transformation roles in South Africa.',
+                    validation: 'ICT profile verified for developer and support roles'
+                },
+                Legal: {
+                    title: 'Legal Profile Match Ready',
+                    desc: 'Your profile shows strong formal study and legal research potential for attorney, compliance, and advisory pathways.',
+                    validation: 'Legal-readiness profile validated'
+                },
+                Teaching: {
+                    title: 'Education Profile Match Ready',
+                    desc: 'Your educational background and communication focus align well with teaching, curriculum, and learning support roles.',
+                    validation: 'Teaching profile validated for classroom roles'
+                },
+                Engineering: {
+                    title: 'Engineering Profile Match Ready',
+                    desc: 'Your technical and analytical profile indicates strong suitability for engineering support, operations, and maintenance roles.',
+                    validation: 'Engineering profile confirmed'
+                },
+                Healthcare: {
+                    title: 'Healthcare Profile Match Ready',
+                    desc: 'Your profile is aligned with healthcare support, patient care, and clinical operations opportunities.',
+                    validation: 'Healthcare alignment approved'
+                },
+                Finance: {
+                    title: 'Finance Profile Match Ready',
+                    desc: 'Your analytical and business skills support strong fit for accounting, banking, and financial operations roles.',
+                    validation: 'Finance alignment verified'
+                },
+                Telecommunications: {
+                    title: 'Telecoms Profile Match Ready',
+                    desc: 'Your technical and systems profile suits telecommunications support, network, and service operations opportunities.',
+                    validation: 'Telecoms profile validated'
+                },
+                Mining: {
+                    title: 'Mining Profile Match Ready',
+                    desc: 'Your operational and technical talent supports candidates for mining support, engineering, and site operations roles.',
+                    validation: 'Mining fit approved'
+                }
+            };
+
+            const match = matchDefinitions[sector] || {
+                title: 'General Profile Match Ready',
+                desc: 'Your profile is ready to support a broad range of South African job opportunities across multiple sectors.',
+                validation: 'Candidate profile active and secure'
+            };
+
+            document.getElementById('match-score-text').innerText = `${Math.round(score)}%`;
+            document.getElementById('match-title').innerText = match.title;
+            document.getElementById('match-desc').innerText = match.desc;
+            document.getElementById('validation-status').innerHTML = `<i class="fa-solid fa-shield-halved"></i> ${match.validation}`;
+
+            const circle = document.getElementById('match-score-circle');
+            circle.classList.remove('border-emerald-500', 'border-amber-500', 'border-blue-500', 'border-rose-500');
+            if (score >= 80) {
+                circle.classList.add('border-emerald-500');
+                circle.classList.add('bg-emerald-500/10');
+            } else if (score >= 65) {
+                circle.classList.add('border-amber-500');
+                circle.classList.add('bg-amber-500/10');
+            } else {
+                circle.classList.add('border-rose-500');
+                circle.classList.add('bg-rose-500/10');
+            }
+
+            const text = document.getElementById('match-score-text');
+            text.classList.remove('text-emerald-400', 'text-amber-400', 'text-rose-400');
+            if (score >= 80) {
+                text.classList.add('text-emerald-400');
+            } else if (score >= 65) {
+                text.classList.add('text-amber-400');
+            } else {
+                text.classList.add('text-rose-400');
+            }
+        }
+
+        function openProfileModal() {
+            const modal = document.getElementById('profile-modal');
+            if (!modal) return;
+
+            document.getElementById('edit-name').value = candidateProfile.name || '';
+            document.getElementById('edit-email').value = candidateProfile.email || '';
+            document.getElementById('edit-phone').value = candidateProfile.phone || '';
+            document.getElementById('edit-edu').value = candidateProfile.edu || '';
+            document.getElementById('edit-skills').value = candidateProfile.skills || '';
+            document.getElementById('edit-modal-cover').value = candidateProfile.coverLetter || '';
+            modal.classList.remove('hidden');
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profile-modal').classList.add('hidden');
+        }
+
+        function saveProfileChanges() {
+            candidateProfile.name = document.getElementById('edit-name').value.trim() || candidateProfile.name;
+            candidateProfile.email = document.getElementById('edit-email').value.trim() || candidateProfile.email;
+            candidateProfile.phone = document.getElementById('edit-phone').value.trim() || candidateProfile.phone;
+            candidateProfile.edu = document.getElementById('edit-edu').value.trim() || candidateProfile.edu;
+            candidateProfile.skills = document.getElementById('edit-skills').value.trim() || candidateProfile.skills;
+            candidateProfile.coverLetter = document.getElementById('edit-modal-cover').value.trim() || candidateProfile.coverLetter;
+
+            localStorage.setItem('nexuswork_user_profile', JSON.stringify(candidateProfile));
+            updateProfileUI();
+            closeProfileModal();
+        }
+
+        function openPostJobModal() {
+            document.getElementById('post-job-modal').classList.remove('hidden');
+        }
+
+        function closePostJobModal() {
+            document.getElementById('post-job-modal').classList.add('hidden');
+        }
+
+        function submitNewJob() {
+            const title = document.getElementById('new-title').value.trim();
+            const company = document.getElementById('new-company').value.trim();
+            const location = document.getElementById('new-location').value;
+            const category = document.getElementById('new-category').value;
+            const salary = document.getElementById('new-salary').value.trim();
+            const applyUrl = document.getElementById('new-url').value.trim();
+            const description = document.getElementById('new-desc').value.trim();
+
+            if (!title || !company || !description) {
+                alert('Please complete the job title, company, and description before publishing.');
+                return;
+            }
+
+            const newJob = {
+                id: Date.now(),
+                title,
+                company,
+                location,
+                category,
+                salary: salary || 'Market Related',
+                type: 'New Listing',
+                date: 'Active',
+                desc: description,
+                applyUrl: applyUrl || '#'
+            };
+
+            jobsData.unshift(newJob);
+            renderJobs(jobsData);
+            closePostJobModal();
+
+            document.getElementById('new-title').value = '';
+            document.getElementById('new-company').value = '';
+            document.getElementById('new-salary').value = '';
+            document.getElementById('new-url').value = '';
+            document.getElementById('new-desc').value = '';
+        }
+
+        checkAuth();
+        updateProfileUI();
+        updateSavedBadge();
+        renderJobs(jobsData);
+        calculateSalary();
+    </script>
+</body>
+</html>
